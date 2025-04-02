@@ -10,6 +10,8 @@ import { SfnService, SfnServiceOptions } from './sfn/sfn.service'
 import { XmlNamespace, XmlElement, XmlHeader, XmlBody, XmlAttribute, XMLSerializer } from './xml-builder'
 import { ValidateDto } from './validation'
 import { DayUtils, Utils, TimeUtils, WarmupEvent, WarmupResult, WarmupCommand, extractAdditionalInfo } from './utils'
+import { SecretManagerModule } from './secret-manager/secret-manager.module'
+import { SecretManagerService, SecretManagerServiceOptions } from './secret-manager/secret-manager.service'
 
 export {
   CircuitBreaker,
@@ -42,5 +44,8 @@ export {
   WarmupEvent,
   WarmupResult,
   WarmupCommand,
-  extractAdditionalInfo
+  extractAdditionalInfo,
+  SecretManagerModule,
+  SecretManagerService,
+  SecretManagerServiceOptions
 }
