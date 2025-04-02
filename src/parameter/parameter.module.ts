@@ -15,7 +15,9 @@ export class ParameterModule {
       providers: [{
         provide: ParameterService,
         useFactory: async (): Promise<ParameterService> => {
-          return createParameterService(options.parameterServiceOptions)
+          const parameterService = createParameterService(options.parameterServiceOptions)
+          await parameterService.loadParameters()
+          return parameterService
         }
       }],
       exports: [ParameterService]
