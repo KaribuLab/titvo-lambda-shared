@@ -217,6 +217,9 @@ export class ParameterService {
     if (getEpochNow() > this.expiredAt) {
       await this.loadParameters()
     }
+    for (const [k, v] of this.parameters.entries()) {
+      this.logger.debug(`${k}: ${v}`)
+    }
     return this.parameters.get(key) as T
   }
 }
