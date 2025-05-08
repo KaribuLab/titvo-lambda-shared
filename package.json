@@ -1,5 +1,5 @@
 {
-  "name": "titvo-lambda-shared",
+  "name": "@titvo/aws",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

@@ -12,7 +12,7 @@ import { ValidateDto } from './validation'
 import { DayUtils, Utils, TimeUtils, WarmupEvent, WarmupResult, WarmupCommand, extractAdditionalInfo } from './utils'
 import { SecretManagerModule } from './secret-manager/secret-manager.module'
 import { SecretManagerService, SecretManagerServiceOptions } from './secret-manager/secret-manager.service'
-
+import { BatchService } from './batch/batch.service'
 export {
   CircuitBreaker,
   CircuitBreakerError,
@@ -47,5 +47,6 @@ export {
   extractAdditionalInfo,
   SecretManagerModule,
   SecretManagerService,
-  SecretManagerServiceOptions
+  SecretManagerServiceOptions,
+  BatchService
 }
