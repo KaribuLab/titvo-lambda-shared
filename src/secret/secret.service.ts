@@ -12,11 +12,16 @@ export interface SecretManagerServiceOptions {
 
 export class SecretManagerService extends SecretService {
   private readonly logger: Logger = new Logger(SecretManagerService.name)
-  private readonly client: SecretsManagerClient
+  private readonly secretManagerClient: SecretsManagerClient
 
-  constructor (client: SecretsManagerClient) {
+  constructor (secretManagerClient: SecretsManagerClient) {
     super()
-    this.client = client
+    this.logger.debug('SecretManagerService constructor')
+    if (secretManagerClient === undefined) {
+      this.logger.error('secretManagerClient is undefined')
+      throw new Error('secretManagerClient is undefined')
+    }
+    this.secretManagerClient = secretManagerClient
   }
 
   /**
@@ -31,7 +36,7 @@ export class SecretManagerService extends SecretService {
           SecretId: secretName
         })
 
-        const response = await this.client.send(command)
+        const response = await this.secretManagerClient.send(command)
         if (response.SecretString !== undefined) {
           return response.SecretString
         }
@@ -50,9 +55,9 @@ export function createSecretManagerService (options: SecretManagerServiceOptions
   const awsStage = options.awsStage
   const awsEndpoint = options.awsEndpoint
 
-  const client = awsStage === 'localstack'
+  const secretManagerClient = awsStage === 'localstack'
     ? new SecretsManagerClient({ endpoint: awsEndpoint })
     : new SecretsManagerClient({})
 
-  return new SecretManagerService(client)
+  return new SecretManagerService(secretManagerClient)
 }
