@@ -1,6 +1,6 @@
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda'
 import { Logger } from '@nestjs/common'
-import { withRetry } from '../utils/aws.util'
+import { withRetry } from '@aws/utils/aws.util'
 
 export interface LambdaServiceOptions {
   awsStage: string

@@ -1,5 +1,5 @@
 import { DynamicModule } from '@nestjs/common'
-import { createParameterService, ParameterService, ParameterServiceOptions } from './parameter.service'
+import { createParameterService, ParameterService, ParameterServiceOptions } from '@aws/parameter'
 
 export interface ParameterModuleOptions {
   parameterServiceOptions: ParameterServiceOptions

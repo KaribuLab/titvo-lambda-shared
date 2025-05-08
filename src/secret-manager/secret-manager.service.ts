@@ -6,7 +6,7 @@ import {
   UpdateSecretCommand,
   DeleteSecretCommand
 } from '@aws-sdk/client-secrets-manager'
-import { withRetry } from '../utils/aws.util'
+import { withRetry } from '@aws/utils/aws.util'
 
 export interface SecretManagerServiceOptions {
   ttl: number

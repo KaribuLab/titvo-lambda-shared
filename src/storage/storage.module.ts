@@ -1,5 +1,5 @@
 import { DynamicModule } from '@nestjs/common'
-import { createStorageService, StorageService, StorageServiceOptions } from './storage.service'
+import { createStorageService, StorageService, StorageServiceOptions } from '@aws/storage'
 
 export interface StorageModuleOptions {
   storageServiceOptions: StorageServiceOptions

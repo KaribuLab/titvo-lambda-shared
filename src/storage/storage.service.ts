@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import { Readable } from 'stream'
-import { withRetry } from '../utils/aws.util'
+import { withRetry } from '@aws/utils/aws.util'
 
 export async function readableToString (readable: Readable): Promise<string> {
   return await new Promise((resolve, reject) => {

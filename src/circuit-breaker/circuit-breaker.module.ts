@@ -1,5 +1,5 @@
 import { DynamicModule } from '@nestjs/common'
-import { CircuitBreakerService, createCircuitBreakerService, CircuitBreakerServiceOptions } from './circuit-breaker.service'
+import { CircuitBreakerService, createCircuitBreakerService, CircuitBreakerServiceOptions } from '@aws/circuit-breaker'
 
 export interface CircuitBreakerModuleOptions {
   circuitBreakerServiceOptions: CircuitBreakerServiceOptions

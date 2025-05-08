@@ -2,7 +2,7 @@ import { DynamicModule } from '@nestjs/common'
 import { BatchService, BatchServiceOptions, createBatchService } from './batch.service'
 
 export interface BatchModuleOptions {
-  parameterServiceOptions: BatchServiceOptions
+  batchServiceOptions: BatchServiceOptions
   isGlobal?: boolean
 }
 
@@ -15,7 +15,7 @@ export class BatchModule {
       providers: [{
         provide: BatchService,
         useFactory: async (): Promise<BatchService> => {
-          return createBatchService(options.parameterServiceOptions)
+          return createBatchService(options.batchServiceOptions)
         }
       }],
       exports: [BatchService]

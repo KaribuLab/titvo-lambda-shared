@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { SSMClient, GetParametersByPathCommand, PutParameterCommand, GetParameterCommand, DeleteParameterCommand } from '@aws-sdk/client-ssm'
-import { withRetry } from '../utils/aws.util'
+import { withRetry } from '@aws/utils/aws.util'
 
 interface Parameter {
   name: string

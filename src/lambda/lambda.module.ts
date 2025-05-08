@@ -1,5 +1,5 @@
 import { DynamicModule } from '@nestjs/common'
-import { creatLambdaService, LambdaService, LambdaServiceOptions } from './lambda.service'
+import { creatLambdaService, LambdaService, LambdaServiceOptions } from '@aws/lambda'
 
 export interface LambdaModuleOptions {
   lambdaServiceOptions: LambdaServiceOptions

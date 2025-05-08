@@ -1,8 +1,2 @@
-import { SecretManagerModule } from './secret-manager.module'
-import { SecretManagerService, SecretManagerServiceOptions } from './secret-manager.service'
-
-export {
-  SecretManagerModule,
-  SecretManagerService,
-  SecretManagerServiceOptions
-}
+export * from '@aws/secret-manager/secret-manager.module'
+export * from '@aws/secret-manager/secret-manager.service'

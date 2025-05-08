@@ -1,5 +1,5 @@
 import { Module, DynamicModule, Provider, Type, ForwardReference } from '@nestjs/common'
-import { SecretManagerService, SecretManagerServiceOptions, createSecretManagerService } from './secret-manager.service'
+import { SecretManagerService, SecretManagerServiceOptions, createSecretManagerService } from '@aws/secret-manager'
 
 @Module({})
 export class SecretManagerModule {
