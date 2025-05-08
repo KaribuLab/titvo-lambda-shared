@@ -1,6 +1,7 @@
 import { DynamicModule } from '@nestjs/common'
 import { ConfigOptions, createConfigRepository, DynamoConfigRepository } from '@aws/config/config.dynamo'
-import { ConfigService } from './config.service'
+import { ConfigService as AWSConfigService } from './config.service'
+import { ConfigService } from '@titvo/shared'
 export interface ConfigModuleOptions {
   configOptions: ConfigOptions
   isGlobal?: boolean
@@ -12,7 +13,10 @@ export class ConfigModule {
     return {
       module: ConfigModule,
       providers: [
-        ConfigService,
+        {
+          provide: ConfigService,
+          useClass: AWSConfigService
+        },
         {
           provide: DynamoConfigRepository,
           useFactory: () => {
