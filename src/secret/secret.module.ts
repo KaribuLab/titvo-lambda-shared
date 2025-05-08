@@ -1,8 +1,8 @@
 import { Module, DynamicModule, Provider, Type, ForwardReference } from '@nestjs/common'
-import { SecretManagerService, SecretManagerServiceOptions, createSecretManagerService } from '@aws/secret-manager'
+import { SecretManagerService, SecretManagerServiceOptions, createSecretManagerService } from '@aws/secret'
 import { SecretService } from '@titvo/shared'
 @Module({})
-export class SecretManagerModule {
+export class SecretModule {
   static forRoot (options: SecretManagerServiceOptions): DynamicModule {
     const secretManagerServiceProvider: Provider = {
       provide: SecretService,
@@ -13,7 +13,7 @@ export class SecretManagerModule {
     }
 
     return {
-      module: SecretManagerModule,
+      module: SecretModule,
       providers: [secretManagerServiceProvider],
       exports: [secretManagerServiceProvider],
       global: true
@@ -37,7 +37,7 @@ export class SecretManagerModule {
     const imports = options.imports ?? []
 
     return {
-      module: SecretManagerModule,
+      module: SecretModule,
       imports,
       providers: [secretManagerServiceProvider],
       exports: [secretManagerServiceProvider],
