@@ -7,7 +7,7 @@ import {
   DeleteSecretCommand
 } from '@aws-sdk/client-secrets-manager'
 import { withRetry } from '@aws/utils/aws.util'
-
+import { SecretService } from '@titvo/shared'
 export interface SecretManagerServiceOptions {
   ttl: number
   awsStage: string
@@ -20,7 +20,7 @@ function getEpochNow (): number {
 }
 
 @Injectable()
-export class SecretManagerService {
+export class SecretManagerService extends SecretService {
   private readonly logger: Logger = new Logger(SecretManagerService.name)
   private readonly secrets: Map<string, string>
   private readonly ttl: number
@@ -30,6 +30,7 @@ export class SecretManagerService {
   private expiredAt: number
 
   constructor (ttl: number, awsStage: string, serviceName: string, client: SecretsManagerClient) {
+    super()
     this.secrets = new Map<string, string>()
     this.ttl = ttl
     this.awsStage = awsStage
@@ -147,7 +148,7 @@ export class SecretManagerService {
    * @param key Nombre del secreto
    * @returns Valor del secreto
    */
-  public async get<T> (key: string): Promise<T> {
+  public async get (key: string): Promise<string> {
     if (getEpochNow() > this.expiredAt) {
       await this.loadSecrets()
     }
@@ -161,7 +162,13 @@ export class SecretManagerService {
       }
     }
 
-    return this.secrets.get(key) as T
+    const value = this.secrets.get(key)
+
+    if (value === undefined) {
+      throw new Error(`Secreto no encontrado: ${key}`)
+    }
+
+    return value
   }
 }
 
