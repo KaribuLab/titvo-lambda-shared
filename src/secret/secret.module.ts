@@ -4,16 +4,14 @@ import { SecretService } from '@titvo/shared'
 @Module({})
 export class SecretModule {
   static forRoot (options: SecretManagerServiceOptions): DynamicModule {
-    const secretManagerServiceProvider: Provider = {
-      provide: SecretService,
-      useFactory: () => {
-        return createSecretManagerService(options)
-      }
-    }
-
     return {
       module: SecretModule,
-      providers: [secretManagerServiceProvider],
+      providers: [{
+        provide: SecretService,
+        useFactory: () => {
+          return createSecretManagerService(options)
+        }
+      }],
       exports: [SecretService],
       global: true
     }

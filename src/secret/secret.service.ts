@@ -46,7 +46,7 @@ export class SecretManagerService extends SecretService {
   }
 }
 
-export function createSecretManagerService (options: SecretManagerServiceOptions): SecretManagerService {
+export function createSecretManagerService (options: SecretManagerServiceOptions): SecretService {
   const awsStage = options.awsStage
   const awsEndpoint = options.awsEndpoint
 
