@@ -9,8 +9,9 @@ export interface ConfigModuleOptions {
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ConfigModule {
-  static forRoot (options: ConfigOptions): DynamicModule {
+  static forRoot (options: ConfigModuleOptions): DynamicModule {
     return {
+      global: options.isGlobal,
       module: ConfigModule,
       providers: [
         {
@@ -20,7 +21,7 @@ export class ConfigModule {
         {
           provide: DynamoConfigRepository,
           useFactory: () => {
-            return createConfigRepository(options)
+            return createConfigRepository(options.configOptions)
           }
         }
       ],
