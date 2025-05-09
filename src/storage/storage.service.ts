@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Readable } from 'stream'
 import { withRetry } from '@aws/utils/aws.util'
 
@@ -12,14 +13,14 @@ export async function readableToString (readable: Readable): Promise<string> {
   })
 }
 
-export interface StorageServiceOptions {
+export interface S3ServiceOptions {
   awsStage: string
   awsEndpoint: string
 }
 
 @Injectable()
-export class StorageService {
-  private readonly logger = new Logger(StorageService.name)
+export class S3Service {
+  private readonly logger = new Logger(S3Service.name)
   constructor (private readonly s3Client: S3Client) {}
 
   public async get (bucket: string, key: string): Promise<Readable> {
@@ -35,6 +36,17 @@ export class StorageService {
       return response.Body as Readable
     }
     throw new Error('No body in response')
+  }
+
+  async getSignedUrl (bucket: string, key: string, contentType: string, expiresIn: number): Promise<string> {
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ContentType: contentType
+    })
+    return getSignedUrl(this.s3Client, command, {
+      expiresIn
+    })
   }
 
   public async put (bucket: string, key: string, data: string): Promise<void> {
@@ -53,7 +65,7 @@ export class StorageService {
   }
 }
 
-export function createStorageService (options: StorageServiceOptions): StorageService {
+export function createS3Service (options: S3ServiceOptions): S3Service {
   const s3Client = options.awsStage === 'localstack' ? new S3Client({ endpoint: options.awsEndpoint, forcePathStyle: true }) : new S3Client({})
-  return new StorageService(s3Client)
+  return new S3Service(s3Client)
 }

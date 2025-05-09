@@ -1,23 +1,23 @@
 import { DynamicModule } from '@nestjs/common'
-import { createStorageService, StorageService, StorageServiceOptions } from '@aws/storage'
+import { createS3Service, S3Service, S3ServiceOptions } from '@aws/storage'
 
-export interface StorageModuleOptions {
-  storageServiceOptions: StorageServiceOptions
+export interface S3ModuleOptions {
+  s3ServiceOptions: S3ServiceOptions
   isGlobal?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class StorageModule {
-  public static forRoot (options: StorageModuleOptions): DynamicModule {
+export class S3Module {
+  public static forRoot (options: S3ModuleOptions): DynamicModule {
     return {
-      module: StorageModule,
+      module: S3Module,
       providers: [
         {
-          provide: StorageService,
-          useFactory: () => createStorageService(options.storageServiceOptions)
+          provide: S3Service,
+          useFactory: () => createS3Service(options.s3ServiceOptions)
         }
       ],
-      exports: [StorageService],
+      exports: [S3Service],
       global: options.isGlobal
     }
   }
