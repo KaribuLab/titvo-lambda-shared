@@ -44,7 +44,7 @@ export class S3Service {
       Key: key,
       ContentType: contentType
     })
-    return getSignedUrl(this.s3Client, command, {
+    return await getSignedUrl(this.s3Client, command, {
       expiresIn
     })
   }
