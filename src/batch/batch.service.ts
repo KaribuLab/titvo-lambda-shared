@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common'
 
 export interface BatchServiceOptions {
   awsStage: string
-  awsEndpoint: string
   batchRunnerUrl?: string
 }
 
@@ -82,7 +81,6 @@ export class BatchService {
 
 export function createBatchService (options: BatchServiceOptions): BatchService {
   const awsStage = options.awsStage
-  const awsEndpoint = options.awsEndpoint
   const batchRunnerUrl = options.batchRunnerUrl
   
   if (awsStage === 'localstack') {
