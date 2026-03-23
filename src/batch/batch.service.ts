@@ -91,7 +91,7 @@ export function createBatchService (options: BatchServiceOptions): BatchService 
     return new BatchService(null, runnerUrl)
   } else {
     // Usar AWS Batch para otros stages
-    const client = new BatchClient({ endpoint: awsEndpoint })
+    const client = new BatchClient()
     return new BatchService(client, null)
   }
 }
