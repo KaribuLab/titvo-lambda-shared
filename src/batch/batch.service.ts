@@ -25,49 +25,49 @@ export interface JobStatusResponse {
 @Injectable()
 export class BatchService {
   private readonly logger: Logger = new Logger(BatchService.name)
-  constructor(
+  constructor (
     private readonly client: BatchClient | null,
     private readonly batchRunnerUrl: string | null
   ) { }
 
-  async submitJob(jobName: string, jobQueue: string, jobDefinition: string, environment: Environment[]): Promise<SubmitJobResponse> {
+  async submitJob (jobName: string, jobQueue: string, jobDefinition: string, environment: Environment[]): Promise<SubmitJobResponse> {
     if (this.batchRunnerUrl !== null) {
       // Usar batch-runner HTTP service
-      return await this.submitDockerJob(environment)
+      return await this.submitDockerJob(this.batchRunnerUrl, environment)
     } else if (this.client !== null) {
       // Usar AWS Batch
-      return await this.submitAwsBatchJob(jobName, jobQueue, jobDefinition, environment)
+      return await this.submitAwsBatchJob(this.client, jobName, jobQueue, jobDefinition, environment)
     } else {
       throw new Error('Neither batch-runner nor AWS Batch client is available')
     }
   }
 
-  async getJobStatus(jobId: string): Promise<JobStatusResponse> {
+  async getJobStatus (jobId: string): Promise<JobStatusResponse> {
     if (this.batchRunnerUrl !== null) {
       // Usar batch-runner HTTP service
-      const status = await this.getDockerJobStatus(jobId)
+      const status = await this.getDockerJobStatus(this.batchRunnerUrl, jobId)
       this.logger.log(`Docker job ${jobId} status: ${status}`)
       const isFailed = status === JobStatusType.FAILED
       return {
-        status: status as JobStatus,
-        isFailed: isFailed
+        status,
+        isFailed
       }
     } else if (this.client !== null) {
       // Usar AWS Batch
-      const status = await this.getAwsBatchJobStatus(jobId)
+      const status = await this.getAwsBatchJobStatus(this.client, jobId)
       this.logger.log(`AWS Batch job ${jobId} status: ${status}`)
       const isFailed = status === JobStatusType.FAILED
       return {
-        status: status as JobStatus,
-        isFailed: isFailed
+        status,
+        isFailed
       }
     } else {
       throw new Error('Neither batch-runner nor AWS Batch client is available')
     }
   }
 
-  private async getDockerJobStatus(jobId: string): Promise<JobStatus> {
-    const response = await fetch(`${this.batchRunnerUrl!}/get-job-status`, {
+  private async getDockerJobStatus (batchRunnerUrl: string, jobId: string): Promise<JobStatus> {
+    const response = await fetch(`${batchRunnerUrl}/get-job-status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -76,18 +76,25 @@ export class BatchService {
     if (!response.ok) {
       throw new Error(`Batch runner returned status ${response.status}`)
     }
-    const data = await response.json()
-    return data.status! as JobStatus
+    const data = (await response.json()) as { status?: JobStatus }
+    if (data.status === undefined) {
+      throw new Error('Batch runner response missing status')
+    }
+    return data.status
   }
 
-  private async getAwsBatchJobStatus(jobId: string): Promise<JobStatus> {
-    const response = await this.client!.send(new DescribeJobsCommand({
+  private async getAwsBatchJobStatus (client: BatchClient, jobId: string): Promise<JobStatus> {
+    const response = await client.send(new DescribeJobsCommand({
       jobs: [jobId]
     }))
-    return response.jobs![0].status! as JobStatus
+    const status = response.jobs?.[0]?.status
+    if (status === undefined) {
+      throw new Error('DescribeJobs returned no job or status')
+    }
+    return status as JobStatus
   }
 
-  private async submitDockerJob(environment: Environment[]): Promise<SubmitJobResponse> {
+  private async submitDockerJob (batchRunnerUrl: string, environment: Environment[]): Promise<SubmitJobResponse> {
     const containerName = 'titvo-agent-local'
     this.logger.log(`Submitting Docker job via batch-runner: ${containerName}`)
 
@@ -95,7 +102,7 @@ export class BatchService {
     const envArray = environment.map(env => `${env.name}=${env.value}`)
 
     try {
-      const response = await fetch(`${this.batchRunnerUrl!}/run-batch`, {
+      const response = await fetch(`${batchRunnerUrl}/run-batch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -124,7 +131,7 @@ export class BatchService {
     }
   }
 
-  private async submitAwsBatchJob(jobName: string, jobQueue: string, jobDefinition: string, environment: Environment[]): Promise<SubmitJobResponse> {
+  private async submitAwsBatchJob (client: BatchClient, jobName: string, jobQueue: string, jobDefinition: string, environment: Environment[]): Promise<SubmitJobResponse> {
     this.logger.log(`Submitting job ${jobName} to queue ${jobQueue} with definition ${jobDefinition}`)
     const command = new SubmitJobCommand({
       jobDefinition,
@@ -134,7 +141,7 @@ export class BatchService {
         environment
       }
     })
-    const response = await this.client!.send(command)
+    const response = await client.send(command)
     this.logger.log(`Job ${jobName} submitted with jobId ${response.jobId as string}`)
     return {
       jobId: response.jobId as string
@@ -142,7 +149,7 @@ export class BatchService {
   }
 }
 
-export function createBatchService(options: BatchServiceOptions): BatchService {
+export function createBatchService (options: BatchServiceOptions): BatchService {
   const awsStage = options.awsStage
   const batchRunnerUrl = options.batchRunnerUrl
 
