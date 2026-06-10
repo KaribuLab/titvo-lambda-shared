@@ -26,7 +26,7 @@ export class DynamoConfigRepository {
       }
     })
 
-    const result = await withRetry(async () => await this.dynamoDBClient.send(command), 'getConfig', {
+    const result = await withRetry(async () => this.dynamoDBClient.send(command), 'getConfig', {
       maxRetries: 3,
       maxDelayMs: 1000
     })

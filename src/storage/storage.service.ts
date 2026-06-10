@@ -29,7 +29,7 @@ export class S3Service {
         Bucket: bucket,
         Key: key
       })
-      return await this.s3Client.send(command)
+      return this.s3Client.send(command)
     }, `get(${bucket}, ${key})`, { logger: this.logger })
 
     if (response.Body !== undefined) {
@@ -44,7 +44,7 @@ export class S3Service {
       Key: key,
       ContentType: contentType
     })
-    return await getSignedUrl(this.s3Client, command, {
+    return getSignedUrl(this.s3Client, command, {
       expiresIn
     })
   }
@@ -56,7 +56,7 @@ export class S3Service {
         Key: key,
         Body: data
       })
-      return await this.s3Client.send(command)
+      return this.s3Client.send(command)
     }, `put(${bucket}, ${key})`, { logger: this.logger })
 
     if (response.$metadata.httpStatusCode !== 200) {

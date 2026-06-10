@@ -37,7 +37,7 @@ async function waitForExecution (sfnClient: SFNClient, executionArn: string, log
     try {
       const response = await withRetry(async () => {
         const command = new DescribeExecutionCommand({ executionArn })
-        return await sfnClient.send(command)
+        return sfnClient.send(command)
       }, `waitForExecution(${executionArn})`, { logger })
 
       const status = response.status
@@ -72,7 +72,7 @@ export class SfnService {
         stateMachineArn,
         input: JSON.stringify(input)
       })
-      return await this.sfnClient.send(command)
+      return this.sfnClient.send(command)
     }, `startAsyncExecution(${stateMachineArn})`, { logger: this.logger })
 
     if (response.executionArn === undefined) {
@@ -91,7 +91,7 @@ export class SfnService {
     if (this.awsStage === 'localstack') {
       const response = await withRetry(async () => {
         const command = new StartExecutionCommand(params)
-        return await this.sfnClient.send(command)
+        return this.sfnClient.send(command)
       }, `startExecution(${stateMachineArn})`, { logger: this.logger })
 
       if (response.executionArn !== undefined) {
@@ -109,7 +109,7 @@ export class SfnService {
     } else {
       const response = await withRetry(async () => {
         const command = new StartSyncExecutionCommand(params)
-        return await this.sfnClient.send(command)
+        return this.sfnClient.send(command)
       }, `startSyncExecution(${stateMachineArn})`, { logger: this.logger })
 
       if (response.status !== StatusSucceeded) {

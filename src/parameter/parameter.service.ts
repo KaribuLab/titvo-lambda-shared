@@ -73,7 +73,8 @@ export class ParameterService {
 
     while (true) {
       try {
-        return await operation()
+        const result = await operation()
+        return result
       } catch (error) {
         const awsError = error as AWSError
         const errorCode = awsError.name ?? awsError.code ?? 'UnknownError'
@@ -112,7 +113,7 @@ export class ParameterService {
       })
       const output = await this.client.send(command)
       if (output.Version !== undefined) {
-        this.logger.log(`Parameter ${name} version ${output.Version}`)
+        this.logger.log(`Parameter ${name} version ${String(output.Version)}`)
       }
     }, `putWithouthServiceName(${name})`, { logger: this.logger })
   }
@@ -158,7 +159,7 @@ export class ParameterService {
             WithDecryption: true,
             NextToken: nextToken
           })
-          return await this.client.send(command)
+          return this.client.send(command)
         }, `getParameters(${path}, nextToken: ${nextToken !== undefined ? 'presente' : 'ausente'})`, { logger: this.logger })
 
         nextToken = response.NextToken

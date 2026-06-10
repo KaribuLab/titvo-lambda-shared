@@ -19,7 +19,7 @@ export class CircuitBreakerService {
   async getState (systemId: string): Promise<CircuitBreakerDto | null> {
     try {
       const result = await withRetry(async () => {
-        return await this.dynamoDBClient.send(
+        return this.dynamoDBClient.send(
           new GetItemCommand({
             Key: { system_id: { S: systemId } },
             TableName: this.tableName

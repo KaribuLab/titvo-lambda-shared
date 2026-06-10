@@ -19,7 +19,7 @@ export class LambdaService {
       })
       const response = await this.lambdaClient.send(command)
       if (response.Payload !== undefined) {
-        const payloadString = Buffer.from(response.Payload as Uint8Array).toString('utf-8')
+        const payloadString: string = Buffer.from(response.Payload as Uint8Array).toString('utf-8')
         this.logger.log(`Lambda function ${functionName} invoked successfully: ${payloadString}`)
         return JSON.parse(payloadString)
       }

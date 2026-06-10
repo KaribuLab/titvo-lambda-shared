@@ -50,7 +50,8 @@ export async function withRetry<T> (
 
   while (true) {
     try {
-      return await operation()
+      const result = await operation()
+      return result
     } catch (error) {
       const awsError = error as AWSError
       const errorCode = awsError.name ?? awsError.code ?? 'UnknownError'
