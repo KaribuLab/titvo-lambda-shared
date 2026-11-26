@@ -55,7 +55,7 @@ export function createSecretManagerService (options: SecretManagerServiceOptions
   const awsStage = options.awsStage
   const awsEndpoint = options.awsEndpoint
 
-  const secretManagerClient = awsStage === 'localstack'
+  const secretManagerClient = awsStage === 'local'
     ? new SecretsManagerClient({ endpoint: awsEndpoint })
     : new SecretsManagerClient({})
 

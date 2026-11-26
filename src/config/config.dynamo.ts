@@ -44,7 +44,7 @@ export class DynamoConfigRepository {
 }
 
 export function createConfigRepository (options: ConfigOptions): DynamoConfigRepository {
-  const dynamoDBClient = options.awsStage === 'localstack'
+  const dynamoDBClient = options.awsStage === 'local'
     ? new DynamoDBClient({ endpoint: options.awsEndpoint })
     : new DynamoDBClient()
 

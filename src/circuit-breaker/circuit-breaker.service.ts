@@ -71,6 +71,6 @@ export class CircuitBreakerService {
 }
 
 export function createCircuitBreakerService (options: CircuitBreakerServiceOptions): CircuitBreakerService {
-  const dynamoDBClient = options.awsStage === 'localstack' ? new DynamoDBClient({ endpoint: options.awsEndpoint }) : new DynamoDBClient()
+  const dynamoDBClient = options.awsStage === 'local' ? new DynamoDBClient({ endpoint: options.awsEndpoint }) : new DynamoDBClient()
   return new CircuitBreakerService(dynamoDBClient, options.tableName)
 }

@@ -230,6 +230,6 @@ export function createParameterService (options: ParameterServiceOptions): Param
   const awsStage = options.awsStage
   const awsEndpoint = options.awsEndpoint
   const serviceName = options.serviceName
-  const client = awsStage === 'localstack' ? new SSMClient({ endpoint: awsEndpoint }) : new SSMClient()
+  const client = awsStage === 'local' ? new SSMClient({ endpoint: awsEndpoint }) : new SSMClient()
   return new ParameterService(ttl, parameterBasePath, awsStage, serviceName, client)
 }

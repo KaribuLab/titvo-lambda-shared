@@ -88,7 +88,7 @@ export class SfnService {
       input: JSON.stringify(input)
     }
 
-    if (this.awsStage === 'localstack') {
+    if (this.awsStage === 'local') {
       const response = await withRetry(async () => {
         const command = new StartExecutionCommand(params)
         return await this.sfnClient.send(command)
@@ -127,6 +127,6 @@ export class SfnService {
 }
 
 export function createSfnService (options: SfnServiceOptions): SfnService {
-  const sfnClient = options.awsStage === 'localstack' ? new SFNClient({ endpoint: options.awsEndpoint }) : new SFNClient()
+  const sfnClient = options.awsStage === 'local' ? new SFNClient({ endpoint: options.awsEndpoint }) : new SFNClient()
   return new SfnService(sfnClient, options.awsStage)
 }

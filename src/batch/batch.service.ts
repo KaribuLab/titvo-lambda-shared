@@ -111,7 +111,7 @@ export class BatchService {
           containerName,
           environmentVariables: envArray,
           imageName: 'titvo/agent',
-          networkMode: 'titvo-dev_localstack'
+          networkMode: 'titvo-dev_local'
         })
       })
 
@@ -153,7 +153,7 @@ export function createBatchService (options: BatchServiceOptions): BatchService 
   const awsStage = options.awsStage
   const batchRunnerUrl = options.batchRunnerUrl
 
-  if (awsStage === 'localstack') {
+  if (awsStage === 'local') {
     // Usar batch-runner HTTP service
     const runnerUrl = batchRunnerUrl ?? 'http://agent:3001'
     return new BatchService(null, runnerUrl)

@@ -29,6 +29,6 @@ export class LambdaService {
 }
 
 export async function creatLambdaService (options: LambdaServiceOptions): Promise<LambdaService> {
-  const lambdaClient = options.awsStage === 'localstack' ? new LambdaClient({ endpoint: options.awsEndpoint }) : new LambdaClient()
+  const lambdaClient = options.awsStage === 'local' ? new LambdaClient({ endpoint: options.awsEndpoint }) : new LambdaClient()
   return new LambdaService(lambdaClient)
 }

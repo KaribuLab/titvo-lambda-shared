@@ -66,6 +66,6 @@ export class S3Service {
 }
 
 export function createS3Service (options: S3ServiceOptions): S3Service {
-  const s3Client = options.awsStage === 'localstack' ? new S3Client({ endpoint: options.awsEndpoint, forcePathStyle: true }) : new S3Client({})
+  const s3Client = options.awsStage === 'local' ? new S3Client({ endpoint: options.awsEndpoint, forcePathStyle: true }) : new S3Client({})
   return new S3Service(s3Client)
 }
